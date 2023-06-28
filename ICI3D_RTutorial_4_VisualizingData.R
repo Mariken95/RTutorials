@@ -32,10 +32,13 @@ path <- ??? # Replace the question marks with a character string telling R
 ## and you can replace it with where you have saved the data set.
 setwd(path)
 
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
 ######################################################################
 ## 2A - Loading and exploring the data.  
 
-bots.dat <- read.csv('HIV_Botswana.csv')
+bots.dat <- read.csv('datasets/HIV_Botswana.csv')
+
 head(bots.dat, 5)
 
 ## Let's plot a pie chart of the HIV prevalence in 1994. 
@@ -47,7 +50,11 @@ pie(c(bots.dat$prevHIV[bots.dat$year == 1994], # Proportion HIV+
     main = "HIV prevalence in Botswana, 1994")
 
 ## Change the above code to plot the prevalence of HIV in 2001.
-
+pie(c(bots.dat$prevHIV[bots.dat$year == 2001], # Proportion HIV+
+			1 - bots.dat$prevHI[bots.dat$year == 2001]), # Proportion HIV-
+		labels = c("HIV +", "HIV -"),
+		col = c("red","blue"),
+		main = "HIV prevalence in Botswana, 2001")
 
 
 ## While pie charts are good for showing % breakdown between
@@ -84,7 +91,7 @@ barplot(prev.frame,
         main = "HIV Prevalence in Botswana, 1990-2007",
         col = c("red","blue"),
         beside = FALSE,                 # Stacks bars
-        space = 0,                    # TRY 1, .2, 0
+        space = 1,                    # TRY 1, .2, 0
         border = F)                   # TRY TRUE & FALSE
 
 ## We still need to show our audience that red means HIV+ and blue
@@ -92,12 +99,12 @@ barplot(prev.frame,
 ## we can add a legend.
 ?legend
 
-legend("top",                      # Location of the legend
+legend("topright",                      # Location of the legend
        c("HIV-", "HIV+"),
        col = c("blue", "red"),
-       pch = ???,                     # TRY 15 or 19 or other integers
-       bg = ???,                      # TRY various colors
-       cex = ???)                     # TRY .5, 1, 2       
+       pch = 12,                     # TRY 15 or 19 or other integers
+       bg = "white",                      # TRY various colors
+       cex = 1)                     # TRY .5, 1, 2       
 
 ## Alternatively we can just plot prevalence as a series of points.
 plot(bots.dat$year,
@@ -117,7 +124,7 @@ plot(bots.dat$year,
 ## (IIDDA) at http://iidda.mcmaster.ca.
 
 
-measles.Lon <- read.csv("measlesCleanLon.csv")
+measles.Lon <- read.csv("datasets/measlesCleanLon.csv")
 
 ######################################################################
 ## 2A - Now let's explore the data we've imported.

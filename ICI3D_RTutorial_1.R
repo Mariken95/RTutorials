@@ -55,7 +55,7 @@
 #################### 
 ## Don't get discouraged!
 #################### 
-## Learning any new language is always cumulative. Over the next
+## Learning any new language is always cumulative. Over the next 
 ## couple of weeks, I'd recommend doing basic calculations in R rather
 ## than on a calculator, just so you grow more comfortable with the
 ## interface. Even though you might find yourself challenged, I expect

@@ -103,7 +103,7 @@ N0 <- 7780000
 ## initial values of our 2 state variables:
 
 pop.SI <- c(S = 0.065*N0,  # Initially 6.5% of the population is susceptible
-                I = ???)       # ENTER THE NUMBER INITIALLY INFECTED (20.5)
+                I = 20.5)       # ENTER THE NUMBER INITIALLY INFECTED (20.5)
 
 ## Notice that I've named the two values in the initial population vector to
 ## help us keep track of which value is which. This also allows us to take
@@ -121,7 +121,7 @@ values <- c(beta = 3.6,        # Transmission coefficient
 ## Note that we can calculate the value of the basic reproduction number,
 ## R0 = beta / gamma, as follows:
 
-values["beta"]/values["gamma"] # value of R0
+as.numeric(values["beta"]/values["gamma"]) # value of R0
                                # HINT: Try putting this command inside the
                                # function as.numeric() to keep R from
                                # confusingly retaining the name of the first
@@ -131,7 +131,7 @@ values["beta"]/values["gamma"] # value of R0
 
 sir(t=time,y=pop.SI,parms=values)
 
-## Look at the output. What does this mean?
+## Look at the output. What does this mean? ## rate of change in each of the state variables / compartments
 ##
 ## Recall that I said the function outputs the time derivatives of S and I at
 ## the time t. This means that in order to get the (approximate) values of S
@@ -195,7 +195,7 @@ library(deSolve)                # Load libary to be used for numerical integrati
 ##
 ## Let's ask for output every 0.1 days for 365 days, starting at time 0:
 
-time.out <- seq(0,365,???)     # INCLUDE THE APPROPRIATE VALUE TO GET A SEQUENCE
+time.out <- seq(0,365*5,0.1)     # INCLUDE THE APPROPRIATE VALUE TO GET A SEQUENCE
                                # FROM 0 to 365 BY STEPS OF 0.1
 
 ## Now let's see what happens if we plug our inputs into lsoda()...
@@ -245,7 +245,7 @@ plot(ts.sir$time,               # Time on the x axis
      xlab = "Time in days",     # Label the x axis
      ylab = "Number infected",  # Label the y axis
      main = "Measles in New York",    # Plot title
-     xlim = c(0,400),           #
+     xlim = c(0,365*5),           #
      type = "l",                # Use a line plot
      bty = "n")                 # Remove the box around the plot
 
@@ -281,3 +281,46 @@ plot(ts.sir$time,               # Time on the x axis
 ## Now change the value of the life expectancy for the population in the model.
 ## Compare the long-term dynamics of the model with different values for the
 ## life expectancy.
+
+
+# SIR with vital dynamics -------------------------------------------------
+
+sir.bd <- function(t,y,parms){
+	# The with() function gives access to the named values of parms within the
+	# local environment created by the function
+	with(c(as.list(y),parms),{
+		# print(mu)
+		print(t)
+		
+		if(t<365){
+			mu <- mu*2}
+		
+		dSdt <- mu*N - beta*S*I/N - mu*S
+		dIdt <- beta*S*I/N - gamma*I - mu*I
+		# Note: Population size is constant, so don't need to specify dRdt
+		list(c(dSdt,dIdt))
+	})
+}
+
+values.bd <- c(beta = 3.6,        # Transmission coefficient
+						gamma = 1/5,       # 1 / infectious period = 1/5 days
+						mu = 1/(2*365.25),
+						N = N0)            # population size (constant)
+
+time.out <- seq(0,365*2,0.1)     # INCLUDE THE APPROPRIATE VALUE TO GET A SEQUENCE
+
+ts.sir.bd <- data.frame(lsoda(
+	y = pop.SI,               # Initial conditions for population
+	times = time.out,             # Timepoints for evaluation
+	func = sir.bd,                   # Function to evaluate
+	parms = values.bd                # Vector of parameters
+))
+
+plot(ts.sir.bd$time,               # Time on the x axis
+		 ts.sir.bd$I,                  # Number infected (I) on the y axis
+		 xlab = "Time in days",     # Label the x axis
+		 ylab = "Number infected",  # Label the y axis
+		 main = "Measles in New York",    # Plot title
+		 xlim = c(0,365*2),           #
+		 type = "l",                # Use a line plot
+		 bty = "n")                 # Remove the box around the plot
