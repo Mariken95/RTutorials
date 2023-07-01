@@ -182,6 +182,7 @@ summary(table(Choice,Timing))
 ## Perform the same chi-square test that you did previously, but this time, use 
 ## the chisq.test() command.  Note: you may need to change one of the input arguments
 ## to get results that exaclty match those that you previous obtained.
+chisq.test(table(MosquitoData))
 
 ## Measures of effect
 ## The odds ratio and relative risk can be calculated directly from our table:
@@ -190,6 +191,8 @@ table(Choice,Timing)
 ## Take a minute to perform these calculations by hand - then check your results 
 ## using R.  Also be sure you know how to interpret these measures.  which of these
 ## measures of effect is most appropriate for the given study?  
+OR <- (215/219) / (369/221)
+RR <- (215/(215+219)) / (369/(369+221))
 
 ## It's good practice to provide confidence intervales (CIs) when reporting ORs and 
 ## RRs. These convey the degree of uncertainty (due to sampling) that is present in  
@@ -224,6 +227,7 @@ cci(369, 221, 215, 219, graph=FALSE)
 ## Analagously, metrics associated with the RR can be obtained through epiDisplay's
 ## csi() command.  Try using csi() to obtain a CI for the RR. Note: csi doesn't 
 ## plot a graph for a 2x2 table, so you don't need to specify graph=FALSE
+csi(369, 221, 215, 219)
 
 ## Based on the CI's for the OR and RR, what conclusions can you draw about the 
 ## relationship between the variables in the table?
@@ -257,6 +261,7 @@ table(Gender,Malaria)
 ## An OR can be obtained using the cci command.  Try it out.  Note: remember 
 ## the format is cci(caseexp, controlex, casenoex, controlnoex, graph=FALSE).  
 ## Assume exposed = male:
+cci(88, 68, 62, 82, graph=F)
 
 ## You should have found the OR = 1.71.  This represent the "crude" or "unadjusted"
 ## OR.  It suggests that the odds of malaria is higher for men than for women.  Now,
@@ -267,6 +272,8 @@ table(Gender,Malaria)
 table(Gender,Malaria,Workplace)
 
 ## Compute the ORs for each table separately using cci().  
+cci(35, 53, 52, 79, graph=T)
+cci(53, 15, 10, 3, graph=F)
 
 ## The resulting OR's are both close to 1.00.  This reveals two things: 1) Workplace 
 ## appears to be a confounder - the stratified ORs differ from the crude OR. 2) 

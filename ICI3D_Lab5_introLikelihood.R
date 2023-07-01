@@ -44,7 +44,7 @@ barplot.obj <- barplot(dbinom(0:sampleSize,size=sampleSize, prob=true.prev),
 ## Given that we found samplePos
 samplePos
 ## positives, would we accept or reject the hypothesis that the true prevalence is .2?
-potential.prev <- .2
+potential.prev <- .5
 
 ## Calculate the probability of getting every single possible value
 ## from the binomial distribtion with this hypothesized prevalence.
