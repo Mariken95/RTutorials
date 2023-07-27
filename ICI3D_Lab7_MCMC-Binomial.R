@@ -128,14 +128,44 @@ mtext('posterior sample by proposer sd', side=3, line=0, outer=T)
 ## deviations above for 3000 samples. Make sure each histogram has the
 ## same breaks and x-axis limits.
 
+posterior_0.05 <- runMCMC(3000, proposerSD = 0.05)
+posterior_0.1 <- runMCMC(3000, proposerSD = 0.1)
+posterior_0.5 <- runMCMC(3000, proposerSD = 0.5)
+posterior_2 <- runMCMC(3000, proposerSD = 2)
+
+hist(posterior_0.05)
+hist(posterior_0.1)
+hist(posterior_0.5)
+hist(posterior_2)
+
 ## Question 2: Sample 4 chains for 3000 iterations using the same
 ## proposal distribution and plot each chains' trace on the same plot.
+
+posterior_chains <- array(dim = c(3000+1, 4))
+
+for (ii in 1:4) {
+	posterior_chains[,ii] <- runMCMC(3000, proposerSD = 0.1)
+}
+
+plot(posterior_chains[,1], col="red", type="l")
+lines(posterior_chains[,2], col="blue")
+lines(posterior_chains[,3], col="green")
+lines(posterior_chains[,4], col="grey")
 
 ## Question 3: Use the Gelman-Rubin diagnostic (gelman.diag) to assess
 ## whether those four chains have reached convergence. You will need
 ## to conver the chains from 2 into "mcmc" objects (as.mcmc()), and
 ## then put them into an mcmc.list (as.mcmc.list())
 
+post.mcmc <- as.mcmc.list(as.mcmc(posterior_chains))
+list.mcmc <- list()
+list.mcmc[[1]] <- post.mcmc[[1]][,1]
+list.mcmc[[2]] <- post.mcmc[[1]][,2]
+list.mcmc[[3]] <- post.mcmc[[1]][,3]
+list.mcmc[[4]] <- post.mcmc[[1]][,4]
+gelman.diag(as.mcmc.list(list.mcmc))
+
 ## Challenge Question: (A) Plot the Gelman-Rubin diagnostic as a function
 ## of chain length. (B) Do the same plot, but after discarding the first 100 iterations as a "burnin"
+gelman.plot(as.mcmc.list(list.mcmc))
 
